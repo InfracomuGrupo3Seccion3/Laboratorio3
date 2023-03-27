@@ -1,2 +1,2 @@
-Son muy pesados estos archivos, por los que no se subieron al github
+En esta carpeta se encuentran las capturas de wireshark para las pruebas de UDP
 
