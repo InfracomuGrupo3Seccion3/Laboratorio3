@@ -8,7 +8,7 @@ import hashlib
 MAX_BYTES = 65535
 
 # Establecer el puerto y la dirección IP del servidor
-server_address = ('192.168.11.134', 8084)
+server_address = ('192.168.68.110', 8000)
 
 # Crear un socket UDP
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
