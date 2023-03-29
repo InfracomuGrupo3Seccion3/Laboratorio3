@@ -27,7 +27,7 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
     clientSocket.sendall(confirmation.encode('utf-8'))
     print(f"[{idClient}] Message sent.")
     print(f"[{idClient}] Waiting for message...")
-    
+    HASHINCORRECTO = 0
     # Verificar el directorio de descargas
     if not os.path.exists("ReceivedFiles"):
         os.mkdir("ReceivedFiles")
@@ -81,6 +81,7 @@ def main():
     transmissionFile = transmissionFile.encode('utf-8')
     clientSocket.sendall(transmissionFile)
     print(f"[KING CLIENT] se envio el nombre del archivo {transmissionFile}")
+    
     filesize = clientSocket.recv(BSIZE).decode('utf-8')
     print(f"[KING CLIENT] se recibio el tamaño del archivo {filesize}")
 

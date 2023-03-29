@@ -25,7 +25,7 @@ BSIZE = 1024
 HASH_ALGORITHM = hashlib.sha256()
 
 
-def ClientHandler(idClient, fileName, conn, addr):
+def ClientHandler(idClient, fileName, conn, addr, logfileName):
     print(f"[NEW CONNECTION] Client {idClient} connected.")
     
     # Recibir el nombre del archivo a enviar
@@ -57,19 +57,19 @@ def ClientHandler(idClient, fileName, conn, addr):
     
 
     # Hash del archivo
-    hashFile = HASH_ALGORITHM.md5(file.read().encode()).hexdigest()
+    hashFile = hashlib.md5(file.read().encode()).hexdigest()
     print(f"[file][hash][{addr}] {fileName} hash generated.")
     
     # Enviar el hash del archivo
     conn.sendall(hashFile.encode('utf-8'))
     print(f"[file][hash][{addr}] {fileName} hash sent.")
     
-    confirmation = conn.recv(BSIZE).decode('utf-8')
-    
-    if confirmation == "OK":
+    confirmation = conn.recv(BSIZE).decode('utf-8') #Recibe hashes match o no match
+    print(confirmation)
+    if confirmation == "Hashes match.":
         print(f"[file][{addr}] {fileName} sent successfully.")
     else:
-        f.write(f"[file][{addr}] {fileName} sent unsuccessfully.")
+         print(f"[file][{addr}] {fileName} sent unsuccessfully.")
     
     
     # Cerrar la conexión
@@ -97,9 +97,12 @@ def main():
     # Recibir el nombre del archivo a enviar
     transferFile = intialConnection.recv(BSIZE).decode('utf-8')+ ".txt"
     print(f"[MASTER CONNECTION] {transferFile} file to send.")
-    
+    # Extraer el tamaño de un arhivo que entra por parámetro en bytes
+    tam = os.path.getsize(transferFile)
     # Enviar la confirmación de que el archivo fue recibido correctamente
-    intialConnection.sendall("OK".encode('utf-8'))
+    #taamaño a str
+    tam = str(tam)
+    intialConnection.sendall(tam.encode('utf-8'))
     
     # Crea el directorio de registro si no existe
     if not os.path.exists("Logs"):
@@ -115,7 +118,7 @@ def main():
     # Aceptar conexiones de los clientes
     for i in range(clientCant):
         conn, addr = server.accept()
-        thread = threading.Thread(target=ClientHandler, args=(i, transferFile, conn, addr))
+        thread = threading.Thread(target=ClientHandler, args=(i, transferFile, conn, addr, logFileName))
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
     
