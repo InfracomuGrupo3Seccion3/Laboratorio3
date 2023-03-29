@@ -23,7 +23,7 @@ HASHINCORRECTO = 0
 
 def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
     print(f"[{idClient}] Waiting for message...")
-    confirmation = input(f"Cliente {idClient}: ¿Desea recibir el archivo? (S/N): ")
+    confirmation = "S"
     clientSocket.sendall(confirmation.encode('utf-8'))
     print(f"[{idClient}] Message sent.")
     print(f"[{idClient}] Waiting for message...")
@@ -38,7 +38,6 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
             data = clientSocket.recv(BSIZE)
             f.write(data)
             cont += BSIZE
-            print(f"[{idClient}] {cont} bytes received.")
     
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
     

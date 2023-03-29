@@ -48,7 +48,6 @@ def ClientHandler(idClient, fileName, conn, addr, logfileName):
             data = f.read(BSIZE)
             conn.sendall(data)
             cont += BSIZE
-            print(f"[{idClient}] {cont} bytes sent.")
     
     
     # Recibir la confirmación de que el archivo fue recibido correctamente
