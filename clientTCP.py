@@ -21,7 +21,7 @@ BSIZE = 1024
 
 HASHINCORRECTO = 0
 
-def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
+def messageReceiver(clientSocket, fileName, fileSize, idClient, f):
     print(f"[{idClient}] Waiting for message...")
     confirmation = "S"
     clientSocket.sendall(confirmation.encode('utf-8'))
@@ -31,7 +31,7 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
     # Verificar el directorio de descargas
     if not os.path.exists("ReceivedFiles"):
         os.mkdir("ReceivedFiles")
-        
+
     with open(f"ReceivedFiles/{fileName}", "wb") as f:
         cont = 0
         while cont < int(fileSize):
@@ -65,6 +65,8 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, tamClients, f):
     
     clientSocket.sendall(check.encode('utf-8'))
     clientSocket.close()
+
+
     
     
 def main():
@@ -101,7 +103,10 @@ def main():
     threads = []
     for i in range(tamClients):
         id_cliente = i
-        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,tamClients,f))
+        start_time = time.time()
+        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,f))
+        end_time = time.time()
+        f.write(f"{end_time - start_time}\n")
         threads.append(thread)
         thread.start()
     for thread in threads:
