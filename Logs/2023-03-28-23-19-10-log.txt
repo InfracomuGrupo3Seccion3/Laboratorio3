@@ -1,5 +1,0 @@
-File: 1MB.txt 
-Clients: 1 
-tes
-Clientes: 1
-Tiempo de transferencia: 

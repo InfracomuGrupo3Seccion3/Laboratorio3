@@ -21,7 +21,7 @@ BSIZE = 1024
 
 HASHINCORRECTO = 0
 
-def messageReceiver(clientSocket, fileName, fileSize, idClient, f):
+def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
     print(f"[{idClient}] Waiting for message...")
     confirmation = "S"
     clientSocket.sendall(confirmation.encode('utf-8'))
@@ -32,11 +32,11 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, f):
     if not os.path.exists("ReceivedFiles"):
         os.mkdir("ReceivedFiles")
 
-    with open(f"ReceivedFiles/{fileName}", "wb") as f:
+    with open(f"ReceivedFiles/{fileName}", "wb") as file:
         cont = 0
         while cont < int(fileSize):
             data = clientSocket.recv(BSIZE)
-            f.write(data)
+            file.write(data)
             cont += BSIZE
     
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
@@ -61,7 +61,7 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, f):
         print(f"[{idClient}] Hashes don't match.")
         HASHINCORRECTO+=1
         check = "ERROR"
-        f.write(f"[client][{idClient}][{ADDR}] {fileName} Hash received/n")
+        file.write(f"[client][{idClient}][{ADDR}] {fileName} Hash received/n")
     
     clientSocket.sendall(check.encode('utf-8'))
     clientSocket.close()
@@ -77,21 +77,20 @@ def main():
     clientSocket.connect(ADDR)
     print(f"[KING CLIENT] Connected to server at {IP}:{PORT}")
     clientSocket.sendall(str(tamClients).encode('utf-8'))
-    transmissionFile = input("Ingrese el nombre del archivo a transmitir: ")
-    print(f"[KING CLIENT] se espera el archivo {transmissionFile}")
-    transmissionFile = transmissionFile.encode('utf-8')
+    fileName = input("Ingrese el nombre del archivo a transmitir: ")
+    print(f"[KING CLIENT] se espera el archivo {fileName}")
+    transmissionFile = fileName.encode('utf-8')
     clientSocket.sendall(transmissionFile)
     print(f"[KING CLIENT] se envio el nombre del archivo {transmissionFile}")
     
     filesize = clientSocket.recv(BSIZE).decode('utf-8')
     print(f"[KING CLIENT] se recibio el tamaño del archivo {filesize}")
 
-    if not os.path.exists('Logs'):
-        os.makedirs('Logs')
-    f= open('Logs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
-    f.write(f"Archivo: {transmissionFile} Tamaño: {filesize} bytes\n")
-    f.write(f"Clientes: {tamClients}\n")
-    f.write(f"Tiempo de transferencia: \n")
+    if not os.path.exists('ClientLogs'):
+        os.makedirs('ClientLogs')
+    logFileName= open('ClientLogs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
+    logFileName.write(f"Archivo: {transmissionFile}\n")
+    logFileName.write(f"Tamano del archivo: {filesize} bytes\n")
 
     for i in range(tamClients):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -104,14 +103,16 @@ def main():
     for i in range(tamClients):
         id_cliente = i
         start_time = time.time()
-        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,f))
+        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,logFileName))
         end_time = time.time()
-        f.write(f"{end_time - start_time}\n")
+        logFileName.write(f"id del cliente: {id_cliente}\n")
+        logFileName.write(f"Tiempo de transferencia: ")
+        logFileName.write(f"{end_time - start_time}\n")
         threads.append(thread)
         thread.start()
     for thread in threads:
         thread.join()
-    f.close()
+    logFileName.close()
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
     clientSocket.close()
 if __name__ == "__main__":

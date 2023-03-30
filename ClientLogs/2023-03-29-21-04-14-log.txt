@@ -1,0 +1,6 @@
+Archivo: b'1MB'
+Tamano del archivo: 1023953 bytes
+id del cliente: 0
+Tiempo de transferencia: 0.0
+id del cliente: 1
+Tiempo de transferencia: 0.0

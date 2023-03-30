@@ -25,7 +25,7 @@ BSIZE = 1024
 HASH_ALGORITHM = hashlib.sha256()
 
 
-def ClientHandler(idClient, fileName, conn, addr, logfileName):
+def ClientHandler(idClient, fileName, conn, addr):
     print(f"[NEW CONNECTION] Client {idClient} connected.")
     
     # Recibir el nombre del archivo a enviar
@@ -106,21 +106,23 @@ def main():
     # Crea el directorio de registro si no existe
     if not os.path.exists("Logs"):
         os.makedirs("Logs")
-        
-    # Crea el archivo de registro
-    logFileName = open('Logs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
-    logFileName.write(f"File: {transferFile} \n")
-    logFileName.write(f"Clientes: {clientCant} \n")
-    #logFileName.write(f"Time: {now} \n")
     
     
     # Aceptar conexiones de los clientes
     for i in range(clientCant):
         conn, addr = server.accept()
-        thread = threading.Thread(target=ClientHandler, args=(i, transferFile, conn, addr, logFileName))
+        startTime = time.time()
+        thread = threading.Thread(target=ClientHandler, args=(i, transferFile, conn, addr))
+        endTime = time.time()
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
     
+    # Crea el archivo de registro
+    logFileName = open('Logs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
+    logFileName.write(f"Archivo recibido: {transferFile}\n")
+    logFileName.write(f"Cantidad de clientes: {clientCant} \n")
+    logFileName.write(f"Tamano del archivo: {os.path.getsize(transferFile)} bytes\n")
+    logFileName.write(f"Tiempo de transferencia: {endTime - startTime:.2f} segundos\n")
     
     # Cerrar el archivo de registro
     if intialConnection.recv(BSIZE).decode('utf-8') == "DISCONNECT":
