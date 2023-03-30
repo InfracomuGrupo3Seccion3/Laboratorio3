@@ -5,8 +5,8 @@ import threading
 import hashlib
 
 # Dirección IP del servidor
-#IP = '192.168.81.1'
-IP = socket.gethostbyname(socket.gethostname())
+IP = '192.168.1.144'
+#IP = socket.gethostbyname(socket.gethostname())
 # Puerto del servidor
 PORT = 8000
 
