@@ -5,10 +5,10 @@ import threading
 import hashlib
 
 # Dirección IP del servidor
-IP = '192.168.1.144'
+IP = '192.168.77.130'
 #IP = socket.gethostbyname(socket.gethostname())
 # Puerto del servidor
-PORT = 8000
+PORT = 8001
 
 # Dirección del servidor
 ADDR = (IP, PORT)
@@ -31,14 +31,18 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
     # Verificar el directorio de descargas
     if not os.path.exists("ReceivedFiles"):
         os.mkdir("ReceivedFiles")
-
+    print(fileSize)
     with open(f"ReceivedFiles/{fileName}", "wb") as file:
         cont = 0
         while cont < int(fileSize):
+            #thread.wait()
             data = clientSocket.recv(BSIZE)
             file.write(data)
-            cont += BSIZE
-    
+            cont += len(data)
+    #get size of a file
+    tamaño = file
+    #put thread to sleep
+    print(cont)
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
     
     print(f"[{idClient}] All bytes received.")
@@ -63,7 +67,6 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
         check = "ERROR"
         file.write(f"[client][{idClient}][{ADDR}] {fileName} Hash received/n")
     
-    clientSocket.sendall(check.encode('utf-8'))
     clientSocket.close()
 
 
