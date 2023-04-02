@@ -6,11 +6,11 @@ import threading
 import time
 
 # Dirección IP del servidor
-#IP = '192.168.81.1'
-IP = socket.gethostbyname(socket.gethostname())
+IP = '192.168.77.130'
+#IP = socket.gethostbyname(socket.gethostname())
 
 # Puerto del servidor
-PORT = 8000
+PORT = 8001
 
 # Dirección del servidor
 ADDR = (IP, PORT)
@@ -47,7 +47,7 @@ def ClientHandler(idClient, fileName, conn, addr):
         while cont < tam:
             data = f.read(BSIZE)
             conn.sendall(data)
-            cont += BSIZE
+            cont += len(data)
     
     
     # Recibir la confirmación de que el archivo fue recibido correctamente
@@ -58,7 +58,7 @@ def ClientHandler(idClient, fileName, conn, addr):
     # Hash del archivo
     hashFile = hashlib.md5(file.read().encode()).hexdigest()
     print(f"[file][hash][{addr}] {fileName} hash generated.")
-    
+    print(hashFile)
     # Enviar el hash del archivo
     conn.sendall(hashFile.encode('utf-8'))
     print(f"[file][hash][{addr}] {fileName} hash sent.")
