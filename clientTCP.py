@@ -21,7 +21,7 @@ BSIZE = 1024
 
 HASHINCORRECTO = 0
 
-def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
+def messageReceiver(clientSocket, fileName, fileSize, idClient, num_clients):
     print(f"[{idClient}] Waiting for message...")
     confirmation = "S"
     clientSocket.sendall(confirmation.encode('utf-8'))
@@ -32,6 +32,7 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
     if not os.path.exists("ReceivedFiles"):
         os.mkdir("ReceivedFiles")
     print(fileSize)
+    start = time.time()
     with open(f"ReceivedFiles/{fileName}", "wb") as file:
         cont = 0
         while cont < int(fileSize):
@@ -39,14 +40,13 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
             data = clientSocket.recv(BSIZE)
             file.write(data)
             cont += len(data)
-    #get size of a file
-    tamaño = file
-    #put thread to sleep
-    print(cont)
+    end = time.time()
+    time_dif = end - start
+
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
     
     print(f"[{idClient}] All bytes received.")
-    
+   
     file = open(f"ReceivedFiles/{fileName}", 'r')
     hash = clientSocket.recv(BSIZE).decode('utf-8')
     hashAlgorithm = hashlib.md5(file.read().encode()).hexdigest()
@@ -56,16 +56,24 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, logFileName):
     
     ADDR = clientSocket.getpeername()
     check = ""
-    
+    puerto = clientSocket.getsockname()[1]
     if hash == hashAlgorithm:
         print(f"[{idClient}] Hashes match.")
         clientSocket.sendall("Hashes match.".encode('utf-8'))
+        with  open(f"./ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'w')as f:
+            archivo = open(f"ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
+            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} recibido correctamente en {time_dif} segundos\n")
+            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} velocidad de transferencia {int(fileSize)/time_dif} B/segundo\n" )
+
         check = "OK"
     else:
         print(f"[{idClient}] Hashes don't match.")
         HASHINCORRECTO+=1
         check = "ERROR"
-        file.write(f"[client][{idClient}][{ADDR}] {fileName} Hash received/n")
+        with  open(f"ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'w')as f:    
+            archivo = open(f"./ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
+            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} recibido incorrectamente en {time_dif} segundos\n")
+            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} velocidad de transferencia {int(fileSize)/time_dif} B/segundo\n")
     
     clientSocket.close()
 
@@ -91,10 +99,7 @@ def main():
 
     if not os.path.exists('ClientLogs'):
         os.makedirs('ClientLogs')
-    logFileName= open('ClientLogs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
-    logFileName.write(f"Archivo: {transmissionFile}\n")
-    logFileName.write(f"Tamano del archivo: {filesize} bytes\n")
-
+    
     for i in range(tamClients):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(ADDR)
@@ -106,16 +111,12 @@ def main():
     for i in range(tamClients):
         id_cliente = i
         start_time = time.time()
-        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,logFileName))
+        thread = threading.Thread(target=messageReceiver, args=(clientSockets[i],transmissionFile.decode('utf-8'),filesize,id_cliente,tamClients))
         end_time = time.time()
-        logFileName.write(f"id del cliente: {id_cliente}\n")
-        logFileName.write(f"Tiempo de transferencia: ")
-        logFileName.write(f"{end_time - start_time}\n")
         threads.append(thread)
         thread.start()
     for thread in threads:
         thread.join()
-    logFileName.close()
     clientSocket.sendall("Archivo recibido correctamente.".encode('utf-8'))
     clientSocket.close()
 if __name__ == "__main__":
