@@ -7,8 +7,8 @@ import threading
 MAX_BYTES = 65535
 
 # Establecer el puerto y la dirección IP del servidor
-# server_address = ('192.168.11.134', 8081)
-server_address = ('localhost', 8001)
+server_address = ('192.168.11.134', 8008)
+#server_address = ('localhost', 8001)
 
 
 # Preguntar qué archivo desean descargar todos los clientes
@@ -30,12 +30,12 @@ def handle_client(client_id):
     # Recibir el archivo por fragmentos y guardarlos en un archivo en el directorio "ArchivosRecibidos"
     received_bytes = 0
 
-    file_path = f"PruebasUDP/ArchivosRecibidos/Cliente{client_id}-{filename}"
+    file_path = f"PruebasUDP/ArchivosRecibidos/Prueba6Cliente{client_id}-{filename}"
     start_time = time.time()
     with open(file_path, 'wb') as file:
         while True:
             data, _ = client_socket.recvfrom(MAX_BYTES)
-            if data == b'FIN' or len(data) < 64000:
+            if data == b'FIN':
                 print("acabo")
                 break
             file.write(data)
@@ -44,11 +44,11 @@ def handle_client(client_id):
             if time.time() - start_time > 5:
                 print(f"No se ha recibido ningún mensaje después de 5 segundos. Se cancela la descarga del archivo {filename}.")
                 break
-            
+
     file.close()
     end_time = time.time()
 
-    log_path = f"PruebasUDP/LogsCliente/{time.strftime('%Y-%m-%d-%H-%M-%S')}-Cliente{client_id}-log.txt"
+    log_path = f"PruebasUDP/LogsCliente/{time.strftime('%Y-%m-%d-%H-%M-%S')}-Cliente{client_id}Prueba6-log.txt"
     with open(log_path, 'w') as log:
         log.write(f"Archivo recibido: {filename}\n")
         log.write(f"Tamaño del archivo: {os.path.getsize(file_path)} bytes\n")
@@ -67,7 +67,7 @@ for i in range(num_clients):
     print(f"Cliente {i+1} iniciado...")
 
     # Esperar un segundo antes de iniciar el siguiente hilo
-    time.sleep(0.5)
+    time.sleep(3)
 
 # Esperar a que todos los hilos terminen
 for i in range(num_clients):
