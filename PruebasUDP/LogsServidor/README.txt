@@ -1,1 +1,1 @@
-
+En esta carpeta no se tienen los logs por lo que se hicieron en la maquina virtual y como es solamente terminal no se puede hacer push al repo, sin embargo en el codigo se ve como se crean los logs y los resultados importantes son los del cliente 
