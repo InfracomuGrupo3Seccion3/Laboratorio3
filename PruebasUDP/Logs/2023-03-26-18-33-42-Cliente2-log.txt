@@ -1,4 +1,0 @@
-Archivo recibido: 250MB
-Tamaño del archivo: 220416000 bytes
-Tiempo de transferencia: 2.59 segundos
-Entrega exitosa: True

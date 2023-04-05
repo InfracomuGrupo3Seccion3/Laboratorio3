@@ -1,30 +1,23 @@
-import os 
-if not os.path.exists('mensajes'):
-    os.makedirs('mensajes')
-#1KB para UDP
+import random
+import string
 
-file = open("mensajes/1KB.txt", "w")
-texto = 'a' * (250 * 1024 * 1)
-file.write(texto)
-file.close()
+# Genera una cadena aleatoria de longitud 'length'
+def random_string(length):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
 
-#1MB para UDP
+# Genera un archivo de letras random de tamaño 'size' en MB
+def generate_file(size):
+    filename = f"{size}MB.txt"
+    file_size = size * 1024 * 1024 # Convierte el tamaño de MB a bytes
+    chunk_size = 1024 * 1024 # Tamaño de cada chunk en bytes (1MB)
 
-file = open("mensajes/1MB.txt", "w")
-texto = 'a' * (1024 * 1024 * 100)
-file.write(texto)
-file.close()
+    with open(filename, "w") as file:
+        for i in range(int(file_size / chunk_size)):
+            file.write(random_string(chunk_size))
+    
+    print(f"Archivo {filename} generado exitosamente.")
 
-# 100MB para UDP
-
-file = open("mensajes/100MB.txt", "w")
-texto = 'a' * (100 * 1024 * 1024)
-file.write(texto)
-file.close()
-
-# 250MB para UDP
-
-file = open("mensajes/250MB.txt", "w")
-texto = 'a' * (250 * 1024 * 1024)
-file.write(texto)
-file.close()
+# Genera archivos de 100MB y 250MB
+generate_file(100)
+generate_file(250)
