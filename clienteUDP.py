@@ -7,8 +7,8 @@ import threading
 MAX_BYTES = 65535
 
 # Establecer el puerto y la dirección IP del servidor
-server_address = ('192.168.11.134', 8008)
-#server_address = ('localhost', 8001)
+#server_address = ('192.168.11.134', 8008)
+server_address = ('localhost', 8004)
 
 
 # Preguntar qué archivo desean descargar todos los clientes
@@ -31,22 +31,27 @@ def handle_client(client_id):
     received_bytes = 0
 
     file_path = f"PruebasUDP/ArchivosRecibidos/Prueba6Cliente{client_id}-{filename}"
+    client_socket.settimeout(5)
     start_time = time.time()
     with open(file_path, 'wb') as file:
         while True:
-            data, _ = client_socket.recvfrom(MAX_BYTES)
-            if data == b'FIN':
-                print("acabo")
-                break
-            file.write(data)
-            received_bytes += len(data)
-
-            if time.time() - start_time > 5:
+            try:
+                client_socket.settimeout(5) 
+                data, _ = client_socket.recvfrom(MAX_BYTES)
+                if data == b'FIN':
+                    print("acabo")
+                    client_socket.close()
+                    break
+                file.write(data)
+                received_bytes += len(data)
+            except socket.timeout:
                 print(f"No se ha recibido ningún mensaje después de 5 segundos. Se cancela la descarga del archivo {filename}.")
+                client_socket.close()
                 break
 
     file.close()
     end_time = time.time()
+    
 
     log_path = f"PruebasUDP/LogsCliente/{time.strftime('%Y-%m-%d-%H-%M-%S')}-Cliente{client_id}Prueba6-log.txt"
     with open(log_path, 'w') as log:
@@ -56,7 +61,7 @@ def handle_client(client_id):
         log.write(f"Entrega exitosa: {1048576*int(filename[:2]) == received_bytes}")
     log.close()
 
-    client_socket.close()
+    
 
 # Iniciar un hilo para cada cliente
 threads = []
@@ -67,7 +72,7 @@ for i in range(num_clients):
     print(f"Cliente {i+1} iniciado...")
 
     # Esperar un segundo antes de iniciar el siguiente hilo
-    time.sleep(3)
+    time.sleep(0.5)
 
 # Esperar a que todos los hilos terminen
 for i in range(num_clients):
