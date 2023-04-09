@@ -1,4 +1,0 @@
-Archivo recibido: 1MB.txt
-Cantidad de clientes: 2 
-Tamano del archivo: 1023953 bytes
-Tiempo de transferencia: 0.00 segundos

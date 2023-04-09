@@ -1,0 +1,12 @@
+Cantidad de clientes: 1 
+
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 0
+IP del cliente: 192.168.81.1
+Puerto del cliente: 64450
+Tiempo de transferencia: 0.00 segundos
+
+
+El estado de la transferencia al cliente 0 es: Exitoso

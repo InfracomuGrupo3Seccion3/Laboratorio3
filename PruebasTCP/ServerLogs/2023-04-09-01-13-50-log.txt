@@ -1,0 +1,44 @@
+Cantidad de clientes: 5 
+
+
+Nombre del archivo: 250MB.txt
+Tamano del archivo: 262144000 bytes
+Id del cliente: 0
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65154
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 250MB.txt
+Tamano del archivo: 262144000 bytes
+Id del cliente: 1
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65155
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 250MB.txt
+Tamano del archivo: 262144000 bytes
+Id del cliente: 2
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65156
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 250MB.txt
+Tamano del archivo: 262144000 bytes
+Id del cliente: 3
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65157
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 250MB.txt
+Tamano del archivo: 262144000 bytes
+Id del cliente: 4
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65158
+Tiempo de transferencia: 0.0 segundos
+
+
+El estado de la transferencia al cliente 4 es: Exitoso
+El estado de la transferencia al cliente 3 es: Exitoso
+El estado de la transferencia al cliente 2 es: Exitoso
+El estado de la transferencia al cliente 1 es: Exitoso
+El estado de la transferencia al cliente 0 es: Exitoso

@@ -1,0 +1,2 @@
+[CLIENTE][1][49795] recibio correctamente el archivo 250MB en 15.151497840881348 segundos
+[CLIENTE][1][49795] velocidad de transferencia 17301523.767022584 B/segundo

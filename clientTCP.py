@@ -5,8 +5,8 @@ import threading
 import hashlib
 
 # Dirección IP del servidor
-IP = '192.168.77.130'
-#IP = socket.gethostbyname(socket.gethostname())
+#IP = '192.168.77.130'
+IP = socket.gethostbyname(socket.gethostname())
 # Puerto del servidor
 PORT = 8001
 
@@ -29,11 +29,11 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, num_clients):
     print(f"[{idClient}] Waiting for message...")
     HASHINCORRECTO = 0
     # Verificar el directorio de descargas
-    if not os.path.exists("ReceivedFiles"):
-        os.mkdir("ReceivedFiles")
+    if not os.path.exists("PruebasTCP/ReceivedFiles"):
+        os.mkdir("PruebasTCP/ReceivedFiles")
     print(fileSize)
     start = time.time()
-    with open(f"ReceivedFiles/{fileName}", "wb") as file:
+    with open(f"PruebasTCP/ReceivedFiles/{fileName}", "wb") as file:
         cont = 0
         while cont < int(fileSize):
             #thread.wait()
@@ -47,7 +47,7 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, num_clients):
     
     print(f"[{idClient}] All bytes received.")
    
-    file = open(f"ReceivedFiles/{fileName}", 'r')
+    file = open(f"PruebasTCP/ReceivedFiles/{fileName}", 'r')
     hash = clientSocket.recv(BSIZE).decode('utf-8')
     hashAlgorithm = hashlib.md5(file.read().encode()).hexdigest()
     
@@ -60,19 +60,19 @@ def messageReceiver(clientSocket, fileName, fileSize, idClient, num_clients):
     if hash == hashAlgorithm:
         print(f"[{idClient}] Hashes match.")
         clientSocket.sendall("Hashes match.".encode('utf-8'))
-        with  open(f"./ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'w')as f:
-            archivo = open(f"ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
-            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} recibido correctamente en {time_dif} segundos\n")
-            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} velocidad de transferencia {int(fileSize)/time_dif} B/segundo\n" )
+        with  open(f"PruebasTCP/ClientLogs/Cliente{idClient}-NumeroClientes-{num_clients}.txt", 'w')as f:
+            archivo = open(f"PruebasTCP/ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
+            f.write(f"[CLIENTE][{idClient}][{puerto}] recibio correctamente el archivo {fileName} en {time_dif} segundos\n")
+            f.write(f"[CLIENTE][{idClient}][{puerto}] velocidad de transferencia {int(fileSize)/time_dif} B/segundo\n" )
 
         check = "OK"
     else:
         print(f"[{idClient}] Hashes don't match.")
         HASHINCORRECTO+=1
         check = "ERROR"
-        with  open(f"ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'w')as f:    
-            archivo = open(f"./ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
-            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} recibido incorrectamente en {time_dif} segundos\n")
+        with  open(f"PruebasTCP/ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'w')as f:
+            archivo = open(f"PruebasTCP/ClientLogs/Cliente{idClient}-Prueba-{num_clients}.txt", 'r')
+            f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} recibio incorrectamente el archivo {fileName} en {time_dif} segundos\n")
             f.write(f"[CLIENTE][{idClient}][{puerto}] {fileName} velocidad de transferencia {int(fileSize)/time_dif} B/segundo\n")
     
     clientSocket.close()
@@ -97,8 +97,8 @@ def main():
     filesize = clientSocket.recv(BSIZE).decode('utf-8')
     print(f"[KING CLIENT] se recibio el tamaño del archivo {filesize}")
 
-    if not os.path.exists('ClientLogs'):
-        os.makedirs('ClientLogs')
+    if not os.path.exists('PruebasTCP/ClientLogs'):
+        os.makedirs('PruebasTCP/ClientLogs')
     
     for i in range(tamClients):
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

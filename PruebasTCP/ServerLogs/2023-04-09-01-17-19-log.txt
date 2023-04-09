@@ -1,0 +1,84 @@
+Cantidad de clientes: 10 
+
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 0
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65335
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 1
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65336
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 2
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65337
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 3
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65338
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 4
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65339
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 5
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65340
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 6
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65341
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 7
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65342
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 8
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65343
+Tiempo de transferencia: 0.0 segundos
+
+Nombre del archivo: 100MB.txt
+Tamano del archivo: 104857600 bytes
+Id del cliente: 9
+IP del cliente: 192.168.81.1
+Puerto del cliente: 65344
+Tiempo de transferencia: 0.0 segundos
+
+
+El estado de la transferencia al cliente 5 es: Exitoso
+El estado de la transferencia al cliente 3 es: Exitoso
+El estado de la transferencia al cliente 1 es: Exitoso
+El estado de la transferencia al cliente 9 es: Exitoso
+El estado de la transferencia al cliente 2 es: Exitoso
+El estado de la transferencia al cliente 4 es: Exitoso
+El estado de la transferencia al cliente 8 es: Exitoso
+El estado de la transferencia al cliente 6 es: Exitoso
+El estado de la transferencia al cliente 0 es: Exitoso
+El estado de la transferencia al cliente 7 es: Exitoso

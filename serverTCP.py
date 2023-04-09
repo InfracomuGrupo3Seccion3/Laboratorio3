@@ -6,8 +6,8 @@ import threading
 import time
 
 # Dirección IP del servidor
-IP = '192.168.77.130'
-#IP = socket.gethostbyname(socket.gethostname())
+#IP = '192.168.77.130'
+IP = socket.gethostbyname(socket.gethostname())
 
 # Puerto del servidor
 PORT = 8001
@@ -25,7 +25,9 @@ BSIZE = 1024
 HASH_ALGORITHM = hashlib.sha256()
 
 
-def ClientHandler(idClient, fileName, conn, addr):
+def ClientHandler(idClient, fileName, conn, addr, logFileName):
+    
+    # Imprimir el ID del cliente
     print(f"[NEW CONNECTION] Client {idClient} connected.")
     
     # Recibir el nombre del archivo a enviar
@@ -66,9 +68,11 @@ def ClientHandler(idClient, fileName, conn, addr):
     confirmation = conn.recv(BSIZE).decode('utf-8') #Recibe hashes match o no match
     print(confirmation)
     if confirmation == "Hashes match.":
+        logFileName.write(f"El estado de la transferencia al cliente {idClient} es: Exitoso\n")
         print(f"[file][{addr}] {fileName} sent successfully.")
     else:
-         print(f"[file][{addr}] {fileName} sent unsuccessfully.")
+        logFileName.write(f"El estado de la transferencia al cliente {idClient} es: Fallido\n")
+        print(f"[file][{addr}] {fileName} sent unsuccessfully.")
     
     
     # Cerrar la conexión
@@ -97,32 +101,43 @@ def main():
     transferFile = intialConnection.recv(BSIZE).decode('utf-8')+ ".txt"
     print(f"[MASTER CONNECTION] {transferFile} file to send.")
     # Extraer el tamaño de un arhivo que entra por parámetro en bytes
-    tam = os.path.getsize(transferFile)
+    tam = os.path.getsize("Files/" + transferFile)
     # Enviar la confirmación de que el archivo fue recibido correctamente
-    #taamaño a str
+    #tamaño a str
     tam = str(tam)
     intialConnection.sendall(tam.encode('utf-8'))
     
     # Crea el directorio de registro si no existe
-    if not os.path.exists("Logs"):
-        os.makedirs("Logs")
+    if not os.path.exists("PruebasTCP/ServerLogs"):
+        os.makedirs("PruebasTCP/ServerLogs")
     
-    
+    # Abre el archivo de log
+    logFileName = open('PruebasTCP/ServerLogs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w')    
+    logFileName.write(f"Cantidad de clientes: {clientCant} \n\n") 
+
     # Aceptar conexiones de los clientes
     for i in range(clientCant):
         conn, addr = server.accept()
+        
+        # Escribir el archivo de registro
+        logFileName.write(f"\nNombre del archivo: {transferFile}\n")
+        logFileName.write(f"Tamano del archivo: {tam} bytes\n")
+        logFileName.write(f"Id del cliente: {i}\n")
+        logFileName.write(f"IP del cliente: {addr[0]}\n")
+        logFileName.write(f"Puerto del cliente: {addr[1]}\n")
         startTime = time.time()
-        thread = threading.Thread(target=ClientHandler, args=(i, transferFile, conn, addr))
+        thread = threading.Thread(target=ClientHandler, args=(i,"Files/" +  transferFile, conn, addr, logFileName))
         endTime = time.time()
         thread.start()
         print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
-    
-    # Crea el archivo de registro
-    logFileName = open('Logs/'+time.strftime("%Y-%m-%d-%H-%M-%S")+'-log.txt', 'w') 
-    logFileName.write(f"Archivo recibido: {transferFile}\n")
-    logFileName.write(f"Cantidad de clientes: {clientCant} \n")
-    logFileName.write(f"Tamano del archivo: {os.path.getsize(transferFile)} bytes\n")
-    logFileName.write(f"Tiempo de transferencia: {endTime - startTime:.2f} segundos\n")
+        logFileName.write(f"Tiempo de transferencia: {endTime - startTime} segundos\n")
+    logFileName.write(f"\n\n")
+    logFileName.write(f"  / \__\n")
+    logFileName.write(f" (    @\___\n")
+    logFileName.write(f"  /         O\n")
+    logFileName.write(f"  /   (_____/\n")
+    logFileName.write(f" /_____/   U\n")
+    logFileName.write(f"  \n")
     
     # Cerrar el archivo de registro
     if intialConnection.recv(BSIZE).decode('utf-8') == "DISCONNECT":

@@ -1,2 +1,0 @@
-[CLIENTE][8][60333] 100MB recibido correctamente en 22.936001300811768 segundos
-[CLIENTE][8][60333] 100MB velocidad de transferencia 4571747.211938325 B/segundo

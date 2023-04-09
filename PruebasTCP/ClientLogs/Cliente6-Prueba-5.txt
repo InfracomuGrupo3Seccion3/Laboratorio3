@@ -1,0 +1,2 @@
+[CLIENTE][6][65341] recibio correctamente el archivo 100MB en 7.509738445281982 segundos
+[CLIENTE][6][65341] velocidad de transferencia 13962883.09693091 B/segundo
